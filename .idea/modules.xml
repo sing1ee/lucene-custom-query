@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/lucene-custom-query.iml" filepath="$PROJECT_DIR$/lucene-custom-query.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lucene-custom-query_main.iml" filepath="$PROJECT_DIR$/.idea/modules/lucene-custom-query_main.iml" group="lucene-custom-query" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lucene-custom-query_test.iml" filepath="$PROJECT_DIR$/.idea/modules/lucene-custom-query_test.iml" group="lucene-custom-query" />
+    </modules>
+  </component>
+</project>
