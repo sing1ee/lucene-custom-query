@@ -151,7 +151,8 @@ public class SeqSpanScorer extends Scorer{
         }
       }
 
-      if (idx.get(seqTerms[seqTerms.length - 2]).pos - idx.get(seqTerms[1]).pos >= selfWeight.getMaxSpan()) {
+      int span = idx.get(seqTerms[seqTerms.length - 2]).pos - idx.get(seqTerms[1]).pos;
+      if (span < selfWeight.getMaxSpan()) {
         return 1;
       }
       break;

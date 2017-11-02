@@ -44,7 +44,7 @@ public class SeqSpanQuery extends Query {
 
   @Override
   public Weight createWeight(IndexSearcher searcher, boolean needsScores) throws IOException {
-    return super.createWeight(searcher, needsScores);
+    return new SeqSpanWeight(this, searcher);
   }
 
   @Override

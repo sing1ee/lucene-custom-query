@@ -19,9 +19,8 @@ import org.apache.lucene.search.similarities.Similarity;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Stream;
 
-public class SeqSpanWeight extends Weight{
+public class SeqSpanWeight extends Weight {
 
   private final Similarity similarity;
   private final Similarity.SimWeight stats;
@@ -62,7 +61,7 @@ public class SeqSpanWeight extends Weight{
 
   @Override
   public Explanation explain(LeafReaderContext context, int doc) throws IOException {
-    return  Explanation.noMatch("future");
+    return Explanation.noMatch("future");
   }
 
   @Override
@@ -87,8 +86,9 @@ public class SeqSpanWeight extends Weight{
     }
 
     if (fieldTerms.hasPositions() == false) {
-      throw new IllegalStateException("field \"" + terms[0].field() + "\" was indexed without position data; cannot run "
-          + "SeqSpanQuery (phrase=" + getQuery() + ")");
+      throw new IllegalStateException(
+          "field \"" + terms[0].field() + "\" was indexed without position data; cannot run "
+              + "SeqSpanQuery (phrase=" + getQuery() + ")");
     }
 
     // Reuse single TermsEnum below:
@@ -105,7 +105,7 @@ public class SeqSpanWeight extends Weight{
       te.seekExact(t.bytes(), state);
       PostingsEnum postingsEnum = te.postings(null, PostingsEnum.POSITIONS);
       postingsFreqs[i] = new PostingsAndFreq(postingsEnum, positions[i], t);
-//      totalMatchCost += termPositionsCost(te);
+      //      totalMatchCost += termPositionsCost(te);
     }
     return new SeqSpanScorer(this, postingsFreqs, similarity.simScorer(stats, context),
         needsScores, totalMatchCost);

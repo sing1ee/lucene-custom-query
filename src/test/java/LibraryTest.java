@@ -13,6 +13,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queries.SeqSpanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
@@ -68,6 +69,47 @@ public class LibraryTest {
             TopScoreDocCollector collector = TopScoreDocCollector.create(10);
 
             searcher.search(queryBuidler.build(), collector);
+            Stream.of(collector.topDocs().scoreDocs).forEach(x -> {
+                System.out.println(x.doc + " : " + x.score);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test public void testSeqSpanQuery() {
+
+        try {
+
+
+            IndexWriterConfig conf = new IndexWriterConfig(new StandardAnalyzer());
+
+            Directory dir = FSDirectory.open(new File("/Users/zhangcheng/Downloads/idx").toPath());
+
+            IndexWriter writer = new IndexWriter(dir, conf);
+
+            {
+                Document doc = new Document();
+                doc.add(new TextField("field", "b c d e f", Field.Store.YES));
+                writer.addDocument(doc);
+            }
+            {
+                Document doc = new Document();
+                doc.add(new TextField("field", "x b c d x e f", Field.Store.YES));
+                writer.addDocument(doc);
+            }
+            writer.commit();
+
+            IndexReader reader = DirectoryReader.open(writer);
+
+            IndexSearcher searcher = new IndexSearcher(reader);
+
+            SeqSpanQuery ssQuery = new SeqSpanQuery("field", "b", "f", new String[]{"c", "d", "e"}, 3);
+
+            TopScoreDocCollector collector = TopScoreDocCollector.create(10);
+
+            searcher.search(ssQuery, collector);
+
             Stream.of(collector.topDocs().scoreDocs).forEach(x -> {
                 System.out.println(x.doc + " : " + x.score);
             });
