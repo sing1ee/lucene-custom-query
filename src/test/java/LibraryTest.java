@@ -17,11 +17,15 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.junit.Test;
 
+import java.io.File;
 import java.lang.annotation.Documented;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -38,23 +42,18 @@ public class LibraryTest {
 
             IndexWriterConfig conf = new IndexWriterConfig(new StandardAnalyzer());
 
-            Directory dir = new RAMDirectory();
+            Directory dir = FSDirectory.open(new File("/Users/zhangcheng/Downloads/idx").toPath());
 
             IndexWriter writer = new IndexWriter(dir, conf);
 
             {
                 Document doc = new Document();
-                doc.add(new TextField("a", "a b c f", Field.Store.YES));
+                doc.add(new TextField("a", "b c d", Field.Store.YES));
                 writer.addDocument(doc);
             }
             {
                 Document doc = new Document();
-                doc.add(new TextField("a", "a b c d", Field.Store.YES));
-                writer.addDocument(doc);
-            }
-            {
-                Document doc = new Document();
-                doc.add(new TextField("a", "a b c e", Field.Store.YES));
+                doc.add(new TextField("a", "c d b", Field.Store.YES));
                 writer.addDocument(doc);
             }
             writer.commit();
@@ -63,14 +62,15 @@ public class LibraryTest {
 
             IndexSearcher searcher = new IndexSearcher(reader);
             PhraseQuery.Builder queryBuidler = new PhraseQuery.Builder();
-            queryBuidler.add(new Term("a", "a"));
-            queryBuidler.add(new Term("a", "b"));
-            queryBuidler.setSlop(10);
-            TopDocs hits = searcher.search(queryBuidler.build(), 10);
-            for(ScoreDoc sd:hits.scoreDocs) {
-                Document doc = searcher.doc(sd.doc);
-                System.out.println(doc);
-            }
+            queryBuidler.add(new Term("a", "c"), 0);
+            queryBuidler.add(new Term("a", "d"), 1);
+            queryBuidler.setSlop(0);
+            TopScoreDocCollector collector = TopScoreDocCollector.create(10);
+
+            searcher.search(queryBuidler.build(), collector);
+            Stream.of(collector.topDocs().scoreDocs).forEach(x -> {
+                System.out.println(x.doc + " : " + x.score);
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
