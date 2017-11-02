@@ -9,11 +9,8 @@ import org.apache.lucene.index.TermContext;
 import org.apache.lucene.index.TermState;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.search.BulkScorer;
 import org.apache.lucene.search.Explanation;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.PhraseQuery;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.TermStatistics;
 import org.apache.lucene.search.Weight;
@@ -22,6 +19,7 @@ import org.apache.lucene.search.similarities.Similarity;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class SeqSpanWeight extends Weight{
 
@@ -81,6 +79,7 @@ public class SeqSpanWeight extends Weight{
   public Scorer scorer(LeafReaderContext context) throws IOException {
     assert terms.length > 0;
     final LeafReader reader = context.reader();
+    PostingsAndFreq[] postingsFreqs = new PostingsAndFreq[terms.length];
 
     final Terms fieldTerms = reader.terms(field);
     if (fieldTerms == null) {
@@ -105,9 +104,18 @@ public class SeqSpanWeight extends Weight{
       }
       te.seekExact(t.bytes(), state);
       PostingsEnum postingsEnum = te.postings(null, PostingsEnum.POSITIONS);
-//      postingsFreqs[i] = new PhraseQuery.PostingsAndFreq(postingsEnum, positions[i], t);
+      postingsFreqs[i] = new PostingsAndFreq(postingsEnum, positions[i], t);
 //      totalMatchCost += termPositionsCost(te);
     }
-    return null;
+    return new SeqSpanScorer(this, postingsFreqs, similarity.simScorer(stats, context),
+        needsScores, totalMatchCost);
+  }
+
+  public Term[] getTerms() {
+    return selfQuery.getTerms();
+  }
+
+  public int getMaxSpan() {
+    return selfQuery.getMaxSpan();
   }
 }

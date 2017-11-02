@@ -75,4 +75,8 @@ public class SeqSpanQuery extends Query {
     return Stream.concat(Stream.concat(Stream.of(startTerm), Stream.of(seqTerms)), Stream.of(endTerm))
         .toArray(t -> new Term[t]);
   }
-}
+
+  public int getMaxSpan() {
+    return maxSpan;
+  }
+ }

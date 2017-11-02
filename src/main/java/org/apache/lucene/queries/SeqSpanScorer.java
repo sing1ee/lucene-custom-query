@@ -1,16 +1,18 @@
 package org.apache.lucene.queries;
 
+import com.google.common.collect.Maps;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.search.ConjunctionDISI;
 import org.apache.lucene.search.DocIdSetIterator;
 import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.TwoPhaseIterator;
-import org.apache.lucene.search.Weight;
 import org.apache.lucene.search.similarities.Similarity;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class SeqSpanScorer extends Scorer{
 
@@ -35,10 +37,13 @@ public class SeqSpanScorer extends Scorer{
   private final boolean needsScores;
   private float matchCost;
 
-  SeqSpanScorer(Weight weight, PostingsAndFreq[] postings,
+  private final SeqSpanWeight selfWeight;
+
+  SeqSpanScorer(SeqSpanWeight weight, PostingsAndFreq[] postings,
                     Similarity.SimScorer docScorer, boolean needsScores,
                     float matchCost) throws IOException {
     super(weight);
+    this.selfWeight = weight;
     this.docScorer = docScorer;
     this.needsScores = needsScores;
 
@@ -117,42 +122,40 @@ public class SeqSpanScorer extends Scorer{
       posting.upTo = 1;
     }
 
-    int freq = 0;
-    final PostingsAndPosition lead = postings[0];
+    // order constraint
+    final String[] seqTerms = Stream.of(selfWeight.getTerms()).map(x -> x.text()).toArray(t -> new String[t]);
 
-    advanceHead:
-    while (true) {
-      final int phrasePos = lead.pos - lead.offset;
-      for (int j = 1; j < postings.length; ++j) {
-        final PostingsAndPosition posting = postings[j];
-        final int expectedPos = phrasePos + posting.offset;
+    Map<String, PostingsAndPosition> idx = Maps.newHashMap();
 
-        // advance up to the same position as the lead
-        if (advancePosition(posting, expectedPos) == false) {
-          break advanceHead;
-        }
+    for (int i = 0; i < seqTerms.length; ++i) {
 
-        if (posting.pos != expectedPos) { // we advanced too far
-          if (advancePosition(lead, posting.pos - posting.offset + lead.offset)) {
-            continue advanceHead;
-          } else {
-            break advanceHead;
-          }
-        }
-      }
-
-      freq += 1;
-      if (needsScores == false) {
-        break;
-      }
-
-      if (lead.upTo == lead.freq) {
-        break;
-      }
-      lead.pos = lead.postings.nextPosition();
-      lead.upTo += 1;
+      idx.put(seqTerms[i], postings[i]);
     }
 
-    return this.freq = freq;
+    final PostingsAndPosition lead = idx.get(seqTerms[0]);
+
+    LOOP:
+    while (true) {
+      for (int i = 0; i < seqTerms.length - 1; ++i) {
+        PostingsAndPosition before = idx.get(seqTerms[i]);
+        PostingsAndPosition after = idx.get(seqTerms[i + 1]);
+        boolean less = before.pos < after.pos;
+        if (!less) {
+          if (!advancePosition(after, before.pos - before.offset + after.offset)) {
+            if (!advancePosition(lead, lead.pos)) {
+              return 0;
+            }
+            continue LOOP;
+          }
+          continue LOOP;
+        }
+      }
+
+      if (idx.get(seqTerms[seqTerms.length - 2]).pos - idx.get(seqTerms[1]).pos >= selfWeight.getMaxSpan()) {
+        return 1;
+      }
+      break;
+    }
+    return 0;
   }
 }
