@@ -63,7 +63,7 @@ public class SeqSpanScorer extends Scorer{
     return new TwoPhaseIterator(conjunction) {
       @Override
       public boolean matches() throws IOException {
-        return phraseFreq() > 0;
+        return seqSpanFreq() > 0;
       }
 
       @Override
@@ -113,7 +113,7 @@ public class SeqSpanScorer extends Scorer{
     return true;
   }
 
-  private int phraseFreq() throws IOException {
+  private int seqSpanFreq() throws IOException {
     // reset state
     final PostingsAndPosition[] postings = this.postings;
     for (PostingsAndPosition posting : postings) {
