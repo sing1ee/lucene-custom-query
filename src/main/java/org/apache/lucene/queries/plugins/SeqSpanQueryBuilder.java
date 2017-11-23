@@ -14,12 +14,12 @@ import java.util.Objects;
 
 public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilder> {
 
-  public static final String NAME = "seq_span";
+  protected static final String NAME = "seq_span";
 
-  private static final ParseField START_TERM_FIELD = new ParseField("start_term");
-  private static final ParseField SEQ_TERM_FIELD = new ParseField("seq_term");
-  private static final ParseField END_TERM_FIELD = new ParseField("end_term");
-  private static final ParseField MAX_SPAN_FIELD = new ParseField("max_span");
+  protected static final ParseField START_TERM_FIELD = new ParseField("start_term");
+  protected static final ParseField SEQ_TERM_FIELD = new ParseField("seq_term");
+  protected static final ParseField END_TERM_FIELD = new ParseField("end_term");
+  protected static final ParseField MAX_SPAN_FIELD = new ParseField("max_span");
 
   private String fieldName;
   private String startTerm;
