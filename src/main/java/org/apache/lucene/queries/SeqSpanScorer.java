@@ -1,6 +1,5 @@
 package org.apache.lucene.queries;
 
-import com.google.common.collect.Maps;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.search.ConjunctionDISI;
 import org.apache.lucene.search.DocIdSetIterator;
@@ -10,6 +9,8 @@ import org.apache.lucene.search.similarities.Similarity;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -125,7 +126,7 @@ public class SeqSpanScorer extends Scorer{
     // order constraint
     final String[] seqTerms = Stream.of(selfWeight.getTerms()).map(x -> x.text()).toArray(t -> new String[t]);
 
-    Map<String, PostingsAndPosition> idx = Maps.newHashMap();
+    Map<String, PostingsAndPosition> idx = new HashMap<>();
 
     for (int i = 0; i < seqTerms.length; ++i) {
 

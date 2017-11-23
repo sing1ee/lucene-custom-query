@@ -65,7 +65,7 @@ public class SeqSpanQuery extends Query {
     if (!Objects.equals(endTerm, other.endTerm)) {
       return false;
     }
-    if (!Objects.deepEquals(seqTerms, other.seqTerms)) {
+    if (!Objects.equals(seqTerms, other.seqTerms)) {
       return false;
     }
     if (!Objects.equals(maxSpan, other.maxSpan)) {

@@ -23,7 +23,7 @@ public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilde
 
   private String fieldName;
   private String startTerm;
-  private String[] seqTerm;
+  private String seqTerm;
   private String endTerm;
   private int maxSpan;
 
@@ -34,7 +34,7 @@ public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilde
 
     fieldName = in.readString();
     startTerm = in.readString();
-    seqTerm = in.readStringArray();
+    seqTerm = in.readString();
     endTerm = in.readString();
     maxSpan = in.readInt();
   }
@@ -44,7 +44,7 @@ public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilde
 
     out.writeString(fieldName);
     out.writeString(startTerm);
-    out.writeStringArray(seqTerm);
+    out.writeString(seqTerm);
     out.writeString(endTerm);
     out.writeInt(maxSpan);
   }
@@ -55,7 +55,7 @@ public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilde
     builder.startObject(NAME);
     builder.startObject(fieldName);
     builder.field(START_TERM_FIELD.getPreferredName(), startTerm);
-    builder.array(SEQ_TERM_FIELD.getPreferredName(), seqTerm);
+    builder.field(SEQ_TERM_FIELD.getPreferredName(), seqTerm);
     builder.field(END_TERM_FIELD.getPreferredName(), endTerm);
     builder.field(MAX_SPAN_FIELD.getPreferredName(), maxSpan);
     builder.endObject();
@@ -64,7 +64,7 @@ public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilde
 
   @Override
   protected Query doToQuery(QueryShardContext context) throws IOException {
-    return new SeqSpanQuery(fieldName, startTerm, endTerm, seqTerm, maxSpan);
+    return new SeqSpanQuery(fieldName, startTerm, endTerm, seqTerm.split(" "), maxSpan);
   }
 
   @Override
@@ -75,7 +75,7 @@ public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilde
     if (!Objects.equals(startTerm, other.startTerm)) {
       return false;
     }
-    if (!Objects.deepEquals(seqTerm, seqTerm)) {
+    if (!Objects.equals(seqTerm, seqTerm)) {
       return false;
     }
     if (!Objects.equals(endTerm, endTerm)) {
@@ -105,7 +105,7 @@ public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilde
     this.startTerm = startTerm;
   }
 
-  public void setSeqTerm(String[] seqTerm) {
+  public void setSeqTerm(String seqTerm) {
     this.seqTerm = seqTerm;
   }
 
@@ -116,4 +116,6 @@ public class SeqSpanQueryBuilder extends AbstractQueryBuilder<SeqSpanQueryBuilde
   public void setMaxSpan(int maxSpan) {
     this.maxSpan = maxSpan;
   }
+
+
 }

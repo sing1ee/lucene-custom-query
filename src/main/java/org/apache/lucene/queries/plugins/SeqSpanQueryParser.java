@@ -1,5 +1,6 @@
 package org.apache.lucene.queries.plugins;
 
+import org.apache.lucene.queries.SeqSpanQuery;
 import org.elasticsearch.common.ParsingException;
 import org.elasticsearch.common.xcontent.XContentLocation;
 import org.elasticsearch.common.xcontent.XContentParser;
@@ -21,42 +22,32 @@ public class SeqSpanQueryParser implements QueryParser<SeqSpanQueryBuilder>{
     String fieldName = null;
     XContentParser.Token token = null;
     while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
-      if (token == XContentParser.Token.FIELD_NAME) {
-        currentFieldName = parser.currentName();
-      } else if (parseContext.isDeprecatedSetting(currentFieldName)) {
+      if (token == XContentParser.Token.START_OBJECT) {
         // skip
-      } else if (token == XContentParser.Token.START_OBJECT) {
-        throwParsingExceptionOnMultipleFields(SeqSpanQueryBuilder.NAME, parser.getTokenLocation(), fieldName, currentFieldName);
-        fieldName = currentFieldName;
-        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
-
-          if (token == XContentParser.Token.FIELD_NAME) {
-            currentFieldName = parser.currentName();
-          } else if (token.isValue()) {
-
-            if (SeqSpanQueryBuilder.START_TERM_FIELD.match(currentFieldName)) {
-              builder.setStartTerm(parser.text());
-            } else if (SeqSpanQueryBuilder.END_TERM_FIELD.match(currentFieldName)) {
-              builder.setEndTerm(parser.text());
-            } else if (SeqSpanQueryBuilder.SEQ_TERM_FIELD.match(currentFieldName)) {
-              builder.setSeqTerm(parser.list().toArray(new String[0]));
-            } else if (SeqSpanQueryBuilder.MAX_SPAN_FIELD.match(currentFieldName)) {
-              builder.setMaxSpan(parser.intValue());
-            } else {
-              throw new ParsingException(parser.getTokenLocation(),
-                  "[" + SeqSpanQueryBuilder.NAME + "] unknown token [" + token + "] after [" + currentFieldName + "]");
-            }
-          } else {
-            throw new ParsingException(parser.getTokenLocation(),
-                "[" + SeqSpanQueryBuilder.NAME + "] unknown token [" + token + "] after [" + currentFieldName + "]");
-          }
+        System.out.println("start object " + token.isValue());
+      } else if (token == XContentParser.Token.FIELD_NAME) {
+        currentFieldName = parser.currentName();
+        System.out.println(currentFieldName + " " + token.isValue());
+      } else if (token.isValue()) {
+        System.out.println("=== " + currentFieldName);
+        if (SeqSpanQueryBuilder.START_TERM_FIELD.match(currentFieldName)) {
+          System.out.println(parser.text());
+          builder.setStartTerm(parser.text());
+        } else if (SeqSpanQueryBuilder.END_TERM_FIELD.match(currentFieldName)) {
+          System.out.println(parser.text());
+          builder.setEndTerm(parser.text());
+        } else if (SeqSpanQueryBuilder.SEQ_TERM_FIELD.match(currentFieldName)) {
+          System.out.println(parser.text());
+          builder.setSeqTerm(parser.text());
+        } else if (SeqSpanQueryBuilder.MAX_SPAN_FIELD.match(currentFieldName)) {
+          System.out.println(parser.intValue());
+          builder.setMaxSpan(parser.intValue());
+        } else {
+          System.out.println(parser.text());
+          builder.setFieldName(parser.text());
         }
-      } else {
-        throwParsingExceptionOnMultipleFields(SeqSpanQueryBuilder.NAME, parser.getTokenLocation(), fieldName, currentFieldName);
-        fieldName = currentFieldName;
       }
     }
-    builder.setFieldName(fieldName);
     return Optional.of(builder);
   }
 
