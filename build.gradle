@@ -30,6 +30,10 @@ dependencies {
     compile group: 'org.apache.lucene', name: 'lucene-queries', version: '5.5.1'
     compile group: 'org.apache.lucene', name: 'lucene-queryparser', version: '5.5.1'
 
+    // es
+    compile group: 'org.elasticsearch', name: 'elasticsearch', version: '5.5.1'
+
+
     testCompile group: 'org.apache.lucene', name: 'lucene-test-framework', version: '5.5.1'
 
     // Use JUnit test framework

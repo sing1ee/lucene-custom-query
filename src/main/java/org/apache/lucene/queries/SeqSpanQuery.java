@@ -7,6 +7,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Weight;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -53,13 +54,29 @@ public class SeqSpanQuery extends Query {
   }
 
   @Override
-  public int hashCode() {
-    return super.hashCode();
+  public boolean equals(Object obj) {
+    if (!(obj instanceof SeqSpanQuery)) {
+      return false;
+    }
+    SeqSpanQuery other = (SeqSpanQuery) obj;
+    if (!Objects.equals(startTerm, other.startTerm)) {
+      return false;
+    }
+    if (!Objects.equals(endTerm, other.endTerm)) {
+      return false;
+    }
+    if (!Objects.deepEquals(seqTerms, other.seqTerms)) {
+      return false;
+    }
+    if (!Objects.equals(maxSpan, other.maxSpan)) {
+      return false;
+    }
+    return true;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj);
+  public int hashCode() {
+    return Objects.hash(startTerm, seqTerms, endTerm, maxSpan);
   }
 
   @Override
