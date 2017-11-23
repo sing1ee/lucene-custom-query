@@ -1,48 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="lucene-custom-query:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="kotlin-language" name="Kotlin">
-      <configuration version="3" platform="JVM 1.6" useProjectSettings="false">
-        <compilerSettings />
-        <compilerArguments>
-          <option name="destination" value="$MODULE_DIR$/../../build/kotlin-classes/main" />
-          <option name="noStdlib" value="true" />
-          <option name="noReflect" value="true" />
-          <option name="moduleName" value="lucene-custom-query" />
-          <option name="addCompilerBuiltIns" value="true" />
-          <option name="loadBuiltInsFromDependencies" value="true" />
-          <option name="languageVersion" value="1.1" />
-          <option name="apiVersion" value="1.1" />
-          <option name="pluginOptions">
-            <array />
-          </option>
-          <option name="pluginClasspaths">
-            <array />
-          </option>
-        </compilerArguments>
-      </configuration>
-    </facet>
-  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../out/production/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../src/main/kotlin" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-math3:3.6.1" level="project" />
     <orderEntry type="library" name="Gradle: org.elasticsearch:elasticsearch:5.5.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.1.51" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:21.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-core:6.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-analyzers-common:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-backward-codecs:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-grouping:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-highlighter:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-join:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-memory:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-misc:6.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-queries:6.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-queryparser:6.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-sandbox:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-spatial:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-spatial-extras:6.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-spatial3d:6.6.0" level="project" />
@@ -60,11 +40,5 @@
     <orderEntry type="library" name="Gradle: org.hdrhistogram:HdrHistogram:2.1.9" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.8.2" level="project" />
     <orderEntry type="library" name="Gradle: org.elasticsearch:jna:4.4.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-core:6.6.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-analyzers-common:6.6.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-queries:6.6.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-queryparser:6.6.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.lucene:lucene-sandbox:6.6.0" level="project" />
   </component>
 </module>

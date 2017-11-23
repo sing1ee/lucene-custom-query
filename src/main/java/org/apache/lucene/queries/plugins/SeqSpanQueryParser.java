@@ -56,6 +56,7 @@ public class SeqSpanQueryParser implements QueryParser<SeqSpanQueryBuilder>{
         fieldName = currentFieldName;
       }
     }
+    builder.setFieldName(fieldName);
     return Optional.of(builder);
   }
 

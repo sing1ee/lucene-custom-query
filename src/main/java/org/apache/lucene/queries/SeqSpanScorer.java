@@ -28,7 +28,7 @@ public class SeqSpanScorer extends Scorer{
     }
   }
 
-  private final ConjunctionDISI conjunction;
+  private final DocIdSetIterator conjunction;
   private final SeqSpanScorer.PostingsAndPosition[] postings;
 
   private int freq;
