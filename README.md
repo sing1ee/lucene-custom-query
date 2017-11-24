@@ -5,47 +5,47 @@ a b seq/x c seq/x d seq/x e f
 | ---       | ---        | ---               | ---                                                                                           |
 | 0.1       | tag v0.1 | v0.1            | Download: [v0.1](https://github.com/sing1ee/lucene-custom-query/releases/tag/v0.1) |
 
-    ```java
-    
-    try {
-    
-    
-                IndexWriterConfig conf = new IndexWriterConfig(new StandardAnalyzer());
-    
-                Directory dir = FSDirectory.open(new File("/Users/zhangcheng/Downloads/idx").toPath());
-    
-                IndexWriter writer = new IndexWriter(dir, conf);
-    
-                {
-                    Document doc = new Document();
-                    doc.add(new TextField("field", "b c d e f", Field.Store.YES));
-                    writer.addDocument(doc);
-                }
-                {
-                    Document doc = new Document();
-                    doc.add(new TextField("field", "x b c d x e f", Field.Store.YES));
-                    writer.addDocument(doc);
-                }
-                writer.commit();
-    
-                IndexReader reader = DirectoryReader.open(writer);
-    
-                IndexSearcher searcher = new IndexSearcher(reader);
-    
-                SeqSpanQuery ssQuery = new SeqSpanQuery("field", "b", "f", new String[]{"c", "d", "e"}, 3);
-    
-                TopScoreDocCollector collector = TopScoreDocCollector.create(10);
-    
-                searcher.search(ssQuery, collector);
-    
-                Stream.of(collector.topDocs().scoreDocs).forEach(x -> {
-                    System.out.println(x.doc + " : " + x.score);
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
+```java
+
+try {
+
+
+            IndexWriterConfig conf = new IndexWriterConfig(new StandardAnalyzer());
+
+            Directory dir = FSDirectory.open(new File("/Users/zhangcheng/Downloads/idx").toPath());
+
+            IndexWriter writer = new IndexWriter(dir, conf);
+
+            {
+                Document doc = new Document();
+                doc.add(new TextField("field", "b c d e f", Field.Store.YES));
+                writer.addDocument(doc);
             }
-    
-    ```
+            {
+                Document doc = new Document();
+                doc.add(new TextField("field", "x b c d x e f", Field.Store.YES));
+                writer.addDocument(doc);
+            }
+            writer.commit();
+
+            IndexReader reader = DirectoryReader.open(writer);
+
+            IndexSearcher searcher = new IndexSearcher(reader);
+
+            SeqSpanQuery ssQuery = new SeqSpanQuery("field", "b", "f", new String[]{"c", "d", "e"}, 3);
+
+            TopScoreDocCollector collector = TopScoreDocCollector.create(10);
+
+            searcher.search(ssQuery, collector);
+
+            Stream.of(collector.topDocs().scoreDocs).forEach(x -> {
+                System.out.println(x.doc + " : " + x.score);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+```
 
 
 # ES插件使用
@@ -55,17 +55,19 @@ a b seq/x c seq/x d seq/x e f
 - elasticsearch 5.5.1
 
 ### 打包插件
-    
-    ```shell
-    ./gradlew clean build pz
-    # build/distributions/lucene-custom-query.zip
-    ```
+
+```shell
+
+./gradlew clean build pz
+# build/distributions/lucene-custom-query.zip
+```
 
 ### 使用插件
 
 1. 创建索引：POST http://localhost:9200/index
 2. 配置索引：POST http://localhost:9200/index/fulltext/_mapping
-    ```shell
+```shell
+    
     # body
     {
         "fulltext": {
@@ -88,16 +90,17 @@ a b seq/x c seq/x d seq/x e f
             }
         }
     }
-    ```
+```
 3. 创建文档 POST http://localhost:9200/index/fulltext/<docId>
-    ```shell
+```shell
+    
     # http://localhost:9200/index/fulltext/1
     {"content":"a b c d e f"}
     # http://localhost:9200/index/fulltext/2
     {"content":"b c d e f g"}
-    ```
+```
 4. 查询 POST http://localhost:9200/index/fulltext/_search
-    ```shell
+```shell
     {
       "query": {
         "seq_span": {
@@ -109,9 +112,9 @@ a b seq/x c seq/x d seq/x e f
         }
       }
     }
-    ```
+```
    Result:
-   ```shell
+```shell
    {
        "took": 101,
        "timed_out": false,
@@ -136,6 +139,4 @@ a b seq/x c seq/x d seq/x e f
            ]
        }
    }
-   ```
-
-
+```
